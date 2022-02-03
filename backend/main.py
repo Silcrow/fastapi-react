@@ -1,3 +1,5 @@
+"""Receive params as schema, calls services fnc, then respond as schema."""
+from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
 import sqlalchemy.orm as _orm
@@ -44,3 +46,20 @@ async def create_lead(
         db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
     return await _services.create_lead(user=user, db=db, lead=lead)
+
+
+@app.get("/api/leads", response_model=List[_schemas.Lead])
+async def get_leads(
+        user: _schemas.User = _fastapi.Depends(_services.get_current_user),
+        db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.get_leads(user=user, db=db)
+
+
+@app.get("/api/leads/{lead_id}", status_code=200)
+async def get_lead(
+        lead_id: int,
+        user: _schemas.User = _fastapi.Depends(_services.get_current_user),
+        db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.get_lead(lead_id=lead_id, user=user, db=db)
