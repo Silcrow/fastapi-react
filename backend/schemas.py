@@ -6,7 +6,7 @@ class _UserBase(_pydantic.BaseModel):
     email: str
 
 
-class _UserCreate(_UserBase):
+class UserCreate(_UserBase):
     hashed_password: str
 
     class Config:
