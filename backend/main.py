@@ -16,7 +16,9 @@ async def create_user(
     if db_user:
         raise _fastapi.HTTPException(status_code=400, detail="Email already in user")
 
-    return await _services.create_user(user, db)
+    await _services.create_user(user, db)
+
+    return await _services.create_token(user)
 
 
 @app.post("/api/token")
@@ -33,3 +35,12 @@ async def generate_token(
 @app.get("/api/users/me", response_model=_schemas.User)
 async def get_user(user: _schemas.User = _fastapi.Depends(_services.get_current_user)):
     return user
+
+
+@app.post("/api/leads", response_model=_schemas.Lead)
+async def create_lead(
+        lead: _schemas.LeadCreate,
+        user: _schemas.User = _fastapi.Depends(_services.get_current_user),
+        db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.create_lead(user=user, db=db, lead=lead)
