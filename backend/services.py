@@ -1,5 +1,6 @@
 """Takes a schema, munge as models, return as schema."""
 import jwt as _jwt
+import datetime as _dt
 import passlib.hash as _hash
 import sqlalchemy.orm as _orm
 import fastapi as _fastapi
@@ -91,3 +92,22 @@ async def _lead_selector(lead_id: int, user: _schemas.User, db: _orm.Session):
 async def get_lead(lead_id: int, user: _schemas.User, db: _orm.Session):
     lead = await _lead_selector(lead_id=lead_id, user=user, db=db)
     return _schemas.Lead.from_orm(lead)
+
+
+async def delete_lead(lead_id: int, user: _schemas.User, db: _orm.Session):
+    lead = await _lead_selector(lead_id, user, db)
+    db.delete(lead)
+    db.commit()
+
+
+async def update_lead(lead_id: int, lead: _schemas.LeadCreate, user: _schemas.User, db: _orm.Session):
+    lead_db = await _lead_selector(lead_id, user, db)
+    lead_db.first_name = lead.first_name
+    lead_db.last_name = lead.last_name
+    lead_db.email = lead.email
+    lead_db.company = lead.company
+    lead_db.note = lead.note
+    lead_db.date_last_updated = _dt.datetime.utcnow()
+    db.commit()
+    db.refresh(lead_db)
+    return _schemas.Lead.from_orm(lead_db)
