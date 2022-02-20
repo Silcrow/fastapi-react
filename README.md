@@ -10,10 +10,17 @@ services.create_database()
 quit()
 ```
 
-## Run
+## Run Backend
 
 ```bash
 poetry shell
 uvicorn main:app --reload
 deactivate
 ```
+## Run Frontend
+
+```bash
+npm start
+```
+
+

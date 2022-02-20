@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import Register from "./components/Register"
+
 const App = () => {
   const [message, setMessage] = useState("");
   const getWelcomeMessage = async () => {
@@ -26,6 +28,7 @@ const App = () => {
   return (
     <div>
       <h1>{message}</h1>
+      <Register />
     </div>
   );
 }
