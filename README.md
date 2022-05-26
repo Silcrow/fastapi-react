@@ -5,7 +5,7 @@ Learn how to do full stack with fastapi and react.
 
 ```bash
 python3
-impor services
+import services
 services.create_database()
 quit()
 ```
